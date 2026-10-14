@@ -1,18 +1,34 @@
 const videoFiles = [
+	'igexport-DNEZtv5ScZ8.mp4',
+	'igexport-DQbxe3xjPOX.mp4',
+	'igexport-DTPm-wGEo-Y.mp4',
+	'igexport-DW3djFHjQ6i.mp4',
+	'igexport-DX_2VjLNGcf.mp4',
+	'igexport-Daa8NicoHHh.mp4',
+	'igexport-DbGb59HyWmR.mp4',
 	'igexport-Dbx1EyUIJT_.mp4',
 	'igexport-DclYOJxguAC.mp4',
 	'igexport-Dcxtconplgf.mp4',
+	'igexport-Dd2ybSzuATA.mp4',
+	'igexport-DdUuXmGAcLQ.mp4',
 	'igexport-DdcQRXQscv7.mp4',
+	'igexport-DeDIDpARKWV.mp4',
 	'igexport-DeIF75UoiHo.mp4',
+	'igexport-DeJ175_xsgb.mp4',
+	'igexport-DeKOJ46MAle.mp4',
+	'igexport-DeLnJTKCj-d.mp4',
 	'igexport-DeOdInYEVbb.mp4',
 	'igexport-DePbRC8vcKL.mp4',
+	'igexport-DeUT4y1K7Zx.mp4',
 	'igexport-DeW-YfMoElS.mp4',
 	'igexport-DeZJrLeul8y.mp4',
 	'igexport-Deb09k6N8-2.mp4',
+	'igexport-Debi905FILK.mp4',
 	'igexport-DebjJj-sIgd.mp4',
 	'igexport-DecJWRHtzyT.mp4',
 	'igexport-DecJsJ9zlDI.mp4',
 	'igexport-DecQebnC6mC.mp4',
+	'igexport-DecmUyGIB18.mp4',
 ];
 const feed = document.querySelector('#feed');
 const soundButton = document.querySelector('.sound-all');
@@ -41,7 +57,7 @@ try {
 feed.replaceChildren(...shuffledFiles.map((file, index) => {
 	const reel = reelTemplate.cloneNode(true);
 	const video = reel.querySelector('video');
-	video.src = file;
+	video.src = `Videos/${file}`;
 	video.preload = index === 0 ? 'auto' : 'metadata';
 	reel.setAttribute('aria-label', `Reel ${index + 1}`);
 	return reel;
