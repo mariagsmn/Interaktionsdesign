@@ -3,50 +3,80 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="theme-color" content="#101411">
-	<title>Video</title>
-	<style>
-		* {
-			box-sizing: border-box;
-		}
-
-		html,
-		body {
-			width: 100%;
-			min-height: 100%;
-			margin: 0;
-		}
-
-		body {
-			min-height: 100svh;
-			display: grid;
-			place-items: center;
-			padding: clamp(16px, 5vw, 64px);
-			background: #101411;
-		}
-
-		main {
-			width: min(100%, 1080px);
-			aspect-ratio: 16 / 9;
-			overflow: hidden;
-			background: #202720;
-			box-shadow: 0 24px 80px rgb(0 0 0 / 35%);
-		}
-
-		video {
-			display: block;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	</style>
+	<meta name="theme-color" content="#101111">
+	<title>Reels</title>
+	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	<main>
-		<video autoplay muted loop playsinline>
-			<source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-			Dein Browser unterstützt das Video-Element nicht.
-		</video>
+	<main class="app">
+		<nav class="sidebar" aria-label="Hauptnavigation">
+			<div class="brand" aria-label="Startseite">
+				<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M7 4h13a5 5 0 0 1 5 5v14a5 5 0 0 1-5 5H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="2.2"/><path d="m14 11 7 5-7 5V11Z" fill="currentColor"/></svg>
+			</div>
+			<button class="nav-item" aria-label="Startseite" title="Startseite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z"/></svg></button>
+			<button class="nav-item" aria-label="Suche" title="Suche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></button>
+			<button class="nav-item active" aria-label="Reels" title="Reels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8 6 4-6 4V8ZM3.5 8h17M8 3l3 5m5-5 3 5"/></svg></button>
+			<button class="nav-item" aria-label="Nachrichten" title="Nachrichten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg></button>
+			<button class="nav-item" aria-label="Erstellen" title="Erstellen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8m-4-4h8"/></svg></button>
+			<div class="nav-spacer"></div>
+			<button class="nav-item" aria-label="Profil" title="Profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
+		</nav>
+
+		<section class="stage" aria-label="Reels">
+			<header class="topbar">
+				<h1 class="top-title">Reels <span>Für dich</span></h1>
+				<button class="sound-all" type="button" aria-label="Ton einschalten">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm4 4a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg>
+					<span>Ton einschalten</span>
+				</button>
+			</header>
+
+			<div class="feed" id="feed" aria-label="Reels-Feed">
+				<article class="reel" aria-label="Reel 1">
+					<video src="igexport-DeW-YfMoElS.mp4" playsinline muted loop preload="auto"></video>
+					<div class="reel-head"><div class="avatar"></div><span class="creator">???</span><button class="follow" type="button">Folgen</button></div>
+					<div class="reel-copy"><h2>???</h2><span class="audio-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Originalton</span></div>
+					<div class="actions">
+						<button class="action like" type="button" aria-label="Gefällt mir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg><span>Gefällt mir</span></button>
+						<button class="action" type="button" aria-label="Kommentieren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg><span>248</span></button>
+						<button class="action share" type="button" aria-label="Teilen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg><span>Teilen</span></button>
+						<div class="disc" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3a9 9 0 0 1 9 9h-7a2 2 0 0 0-2-2V3Z"/></svg></div>
+					</div>
+					<div class="play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z"/></svg></div>
+					<div class="progress"><span></span></div>
+				</article>
+
+				<article class="reel" aria-label="Reel 2">
+					<video src="igexport-DebjJj-sIgd.mp4" playsinline muted loop preload="metadata"></video>
+					<div class="reel-head"><div class="avatar"></div><span class="creator">???</span><button class="follow" type="button">Folgen</button></div>
+					<div class="reel-copy"><h2>???</h2><span class="audio-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Originalton</span></div>
+					<div class="actions">
+						<button class="action like" type="button" aria-label="Gefällt mir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg><span>Gefällt mir</span></button>
+						<button class="action" type="button" aria-label="Kommentieren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg><span>186</span></button>
+						<button class="action share" type="button" aria-label="Teilen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg><span>Teilen</span></button>
+						<div class="disc" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3a9 9 0 0 1 9 9h-7a2 2 0 0 0-2-2V3Z"/></svg></div>
+					</div>
+					<div class="play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z"/></svg></div>
+					<div class="progress"><span></span></div>
+				</article>
+
+				<article class="reel" aria-label="Reel 3">
+					<video src="igexport-DecQebnC6mC.mp4" playsinline muted loop preload="metadata"></video>
+					<div class="reel-head"><div class="avatar"></div><span class="creator">???</span><button class="follow" type="button">Folgen</button></div>
+					<div class="reel-copy"><h2>???</h2><span class="audio-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Originalton</span></div>
+					<div class="actions">
+						<button class="action like" type="button" aria-label="Gefällt mir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg><span>Gefällt mir</span></button>
+						<button class="action" type="button" aria-label="Kommentieren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg><span>312</span></button>
+						<button class="action share" type="button" aria-label="Teilen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg><span>Teilen</span></button>
+						<div class="disc" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3a9 9 0 0 1 9 9h-7a2 2 0 0 0-2-2V3Z"/></svg></div>
+					</div>
+					<div class="play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z"/></svg></div>
+					<div class="progress"><span></span></div>
+				</article>
+			</div>
+		</section>
 	</main>
+
+	<script src="script.js" defer></script>
 </body>
 </html>
