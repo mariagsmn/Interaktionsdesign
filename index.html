@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#101411">
+	<title>Video</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			width: 100%;
+			min-height: 100%;
+			margin: 0;
+		}
+
+		body {
+			min-height: 100svh;
+			display: grid;
+			place-items: center;
+			padding: clamp(16px, 5vw, 64px);
+			background: #101411;
+		}
+
+		main {
+			width: min(100%, 1080px);
+			aspect-ratio: 16 / 9;
+			overflow: hidden;
+			background: #202720;
+			box-shadow: 0 24px 80px rgb(0 0 0 / 35%);
+		}
+
+		video {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<video autoplay muted loop playsinline>
+			<source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+			Dein Browser unterstützt das Video-Element nicht.
+		</video>
+	</main>
+</body>
+</html>
