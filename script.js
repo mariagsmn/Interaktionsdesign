@@ -119,7 +119,27 @@ reels.forEach((reel) => {
 	reel.querySelector('.like').addEventListener('click', (event) => {
 		const button = event.currentTarget;
 		button.classList.toggle('liked');
-		button.setAttribute('aria-pressed', button.classList.contains('liked'));
+		const liked = button.classList.contains('liked');
+		button.setAttribute('aria-pressed', liked);
+		if (liked) {
+			const reelBounds = reel.getBoundingClientRect();
+			const buttonBounds = button.getBoundingClientRect();
+			for (let row = 0; row < 4; row += 1) {
+				for (let column = 0; column < 3; column += 1) {
+					const heart = document.createElement('span');
+					heart.className = 'floating-heart';
+					heart.setAttribute('aria-hidden', 'true');
+					heart.textContent = '♥';
+					const horizontalScatter = (Math.random() - 0.5) * 38;
+					const verticalScatter = (Math.random() - 0.5) * 16;
+					heart.style.left = `${buttonBounds.left - reelBounds.left + buttonBounds.width / 2 + horizontalScatter}px`;
+					heart.style.top = `${buttonBounds.top - reelBounds.top + buttonBounds.height / 2 - row * 13 + verticalScatter}px`;
+					heart.style.animationDelay = `${row * 90 + column * 35 + Math.random() * 100}ms`;
+					heart.addEventListener('animationend', () => heart.remove(), { once: true });
+					reel.append(heart);
+				}
+			}
+		}
 	});
 	reel.querySelector('.follow').addEventListener('click', (event) => {
 		const button = event.currentTarget;
