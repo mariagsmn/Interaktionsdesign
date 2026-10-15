@@ -29,6 +29,20 @@ const videoFiles = [
 	'igexport-DecJsJ9zlDI.mp4',
 	'igexport-DecQebnC6mC.mp4',
 	'igexport-DecmUyGIB18.mp4',
+	'igexport-DDQNvpUSwze.mp4',
+	'igexport-DDYPAwdNqC_.mp4',
+	'igexport-DFk6ECkyTtw.mp4',
+	'igexport-DGdAUK2N9Rj.mp4',
+	'igexport-DIQqHP-io37.mp4',
+	'igexport-DcJ2FFPyQVq.mp4',
+	'igexport-DeCoYaoDwiH.mp4',
+	'igexport-DePBUFlRzzg.mp4',
+	'igexport-DePJDyKsErh.mp4',
+	'igexport-DeTl-brMH1v.mp4',
+	'igexport-DeWpVI7yagP.mp4',
+	'igexport-DeajCrtOSwP.mp4',
+	'igexport-Debe7wGuD0A.mp4',
+	'igexport-DeecWMSsQOy.mp4',
 ];
 const feed = document.querySelector('#feed');
 const soundButton = document.querySelector('.sound-all');
@@ -124,6 +138,7 @@ reels.forEach((reel) => {
 		if (liked) {
 			const reelBounds = reel.getBoundingClientRect();
 			const buttonBounds = button.getBoundingClientRect();
+			const hearts = document.createDocumentFragment();
 			for (let row = 0; row < 4; row += 1) {
 				for (let column = 0; column < 3; column += 1) {
 					const heart = document.createElement('span');
@@ -134,11 +149,13 @@ reels.forEach((reel) => {
 					const verticalScatter = (Math.random() - 0.5) * 16;
 					heart.style.left = `${buttonBounds.left - reelBounds.left + buttonBounds.width / 2 + horizontalScatter}px`;
 					heart.style.top = `${buttonBounds.top - reelBounds.top + buttonBounds.height / 2 - row * 13 + verticalScatter}px`;
+					heart.style.setProperty('--heart-drift', `${2 + Math.random() * 4}px`);
 					heart.style.animationDelay = `${row * 90 + column * 35 + Math.random() * 100}ms`;
 					heart.addEventListener('animationend', () => heart.remove(), { once: true });
-					reel.append(heart);
+					hearts.append(heart);
 				}
 			}
+			reel.append(hearts);
 		}
 	});
 	reel.querySelector('.follow').addEventListener('click', (event) => {

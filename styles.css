@@ -258,27 +258,23 @@ button { color: inherit; font: inherit; }
 	position: absolute;
 	z-index: 4;
 	color: #ff5369;
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 1;
 	text-shadow: 0 1px 6px rgb(0 0 0 / 45%);
 	pointer-events: none;
-	translate: -50% 0;
-	animation: heart-float 2.6s linear forwards, heart-wobble 1.3s linear 2;
+	opacity: 0;
+	transform: translate(-50%, 0) scale(.45) rotate(-5deg);
+	animation: heart-float 2.6s linear both;
 }
 
 @keyframes heart-float {
-	0% { opacity: 0; translate: -50% 0; scale: .65; }
-	10% { opacity: 1; }
-	80% { opacity: .85; }
-	100% { opacity: 0; translate: -50% -180px; scale: .72; }
-}
-
-@keyframes heart-wobble {
-	0% { transform: translateX(0) rotate(-5deg); }
-	25% { transform: translateX(2px) rotate(2deg); }
-	50% { transform: translateX(0) rotate(5deg); }
-	75% { transform: translateX(-2px) rotate(-2deg); }
-	100% { transform: translateX(0) rotate(-5deg); }
+	0% { opacity: 0; transform: translate(-50%, 0) scale(.45) rotate(-5deg); }
+	8% { opacity: 1; transform: translate(calc(-50% + var(--heart-drift)), -18px) scale(.82) rotate(2deg); }
+	25% { transform: translate(calc(-50% - var(--heart-drift)), -50px) scale(.92) rotate(5deg); }
+	42% { transform: translate(calc(-50% + var(--heart-drift)), -82px) scale(.98) rotate(-3deg); }
+	59% { transform: translate(calc(-50% - var(--heart-drift)), -114px) scale(.9) rotate(-5deg); }
+	76% { opacity: .85; transform: translate(calc(-50% + var(--heart-drift)), -146px) scale(.82) rotate(3deg); }
+	100% { opacity: 0; transform: translate(-50%, -185px) scale(.68) rotate(0); }
 }
 
 .disc {
