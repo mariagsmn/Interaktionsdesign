@@ -43,10 +43,23 @@ const videoFiles = [
 	'igexport-DeajCrtOSwP.mp4',
 	'igexport-Debe7wGuD0A.mp4',
 	'igexport-DeecWMSsQOy.mp4',
+	'igexport-C55oAKJifNn.mp4',
+	'igexport-DbIm3BxEwMp.mp4',
+	'igexport-DcSGsU8hmmz.mp4',
+	'igexport-DcgseqFlbKH.mp4',
+	'igexport-DeEiFuCs7_B.mp4',
+	'igexport-DeMHzTEPsOl.mp4',
+	'igexport-DeZVx5gMLJq.mp4',
+	'igexport-DebZLnDDoIO.mp4',
+	'igexport-DecaGsCsK_4.mp4',
+	'igexport-DecfvksvHiW.mp4',
+	'igexport-DeeFkJ6DRU0.mp4',
+	'igexport-DeeLt9-uxAI.mp4',
 ];
 const feed = document.querySelector('#feed');
 const soundButton = document.querySelector('.sound-all');
-let soundEnabled = false;
+const playedVideos = new Set();
+let soundEnabled = true;
 let wheelLocked = false;
 
 const reelTemplate = feed.querySelector('.reel').cloneNode(true);
@@ -80,16 +93,45 @@ feed.replaceChildren(...shuffledFiles.map((file, index) => {
 const reels = [...feed.querySelectorAll('.reel')];
 const videos = reels.map((reel) => reel.querySelector('video'));
 
-feed.addEventListener('wheel', (event) => {
-	event.preventDefault();
-	if (wheelLocked || Math.abs(event.deltaY) < 8) return;
+function moveReel(direction) {
+	if (wheelLocked) return;
 	const currentIndex = Math.round(feed.scrollTop / feed.clientHeight);
-	const nextIndex = Math.max(0, Math.min(reels.length - 1, currentIndex + Math.sign(event.deltaY)));
+	const nextIndex = Math.max(0, Math.min(reels.length - 1, currentIndex + direction));
 	if (nextIndex === currentIndex) return;
 	wheelLocked = true;
 	feed.scrollTo({ top: nextIndex * feed.clientHeight, behavior: 'smooth' });
 	window.setTimeout(() => { wheelLocked = false; }, 700);
+}
+
+feed.addEventListener('wheel', (event) => {
+	event.preventDefault();
+	if (wheelLocked || Math.abs(event.deltaY) < 8) return;
+	moveReel(Math.sign(event.deltaY));
 }, { passive: false });
+
+document.addEventListener('keydown', (event) => {
+	if (event.altKey || event.ctrlKey || event.metaKey) return;
+	if (event.target instanceof HTMLElement && event.target.isContentEditable) return;
+	if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
+
+	switch (event.key) {
+		case 'ArrowDown':
+		case 'ArrowUp':
+			event.preventDefault();
+			moveReel(event.key === 'ArrowDown' ? 1 : -1);
+			break;
+		case 'ArrowRight':
+		case 'ArrowLeft': {
+			event.preventDefault();
+			const currentIndex = Math.round(feed.scrollTop / feed.clientHeight);
+			const video = videos[currentIndex];
+			if (!video || !Number.isFinite(video.duration)) return;
+			const seekDirection = event.key === 'ArrowRight' ? 1 : -1;
+			video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seekDirection * 5));
+			break;
+		}
+	}
+});
 
 function setSound(enabled) {
 	soundEnabled = enabled;
@@ -98,14 +140,23 @@ function setSound(enabled) {
 	soundButton.querySelector('span').textContent = enabled ? 'Ton ausschalten' : 'Ton einschalten';
 }
 
+function updateVideoOpacity() {
+	const fadeProgress = Math.min(1, Math.max(0, (playedVideos.size - 10) / 10));
+	videos.forEach((video) => { video.style.opacity = String(1 - fadeProgress); });
+}
+
+setSound(soundEnabled);
+
 const observer = new IntersectionObserver((entries) => {
 	entries.forEach((entry) => {
 		const video = entry.target.querySelector('video');
 		if (entry.isIntersecting && entry.intersectionRatio >= 0.65) {
 			videos.forEach((other) => { if (other !== video) other.pause(); });
 			video.muted = !soundEnabled;
-			video.play().catch(() => {});
-			entry.target.classList.remove('paused');
+			video.play().then(() => entry.target.classList.remove('paused')).catch((error) => {
+				entry.target.classList.add('paused');
+				console.error('Reel konnte nicht abgespielt werden.', error);
+			});
 		} else {
 			video.pause();
 		}
@@ -120,10 +171,19 @@ reels.forEach((reel) => {
 	const video = reel.querySelector('video');
 	const progress = reel.querySelector('.progress span');
 	video.addEventListener('click', () => {
-		if (video.paused) video.play().then(() => reel.classList.remove('paused')).catch(() => {});
+		if (video.paused) video.play().then(() => reel.classList.remove('paused')).catch((error) => {
+			reel.classList.add('paused');
+			console.error('Reel konnte nicht abgespielt werden.', error);
+		});
 		else { video.pause(); reel.classList.add('paused'); }
 	});
-	video.addEventListener('play', () => reel.classList.remove('paused'));
+	video.addEventListener('play', () => {
+		if (!playedVideos.has(video)) {
+			playedVideos.add(video);
+			updateVideoOpacity();
+		}
+		reel.classList.remove('paused');
+	});
 	video.addEventListener('pause', () => {
 		if (reel.getBoundingClientRect().height > 0 && video.currentTime > 0) reel.classList.add('paused');
 	});
