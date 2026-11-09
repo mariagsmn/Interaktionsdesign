@@ -1,10 +1,10 @@
 :root {
 	color-scheme: dark;
-	--ink: #f5f5f3;
-	--muted: #a6a6a2;
-	--surface: #101111;
-	--line: #282927;
-	--blue: #8fc2cd;
+	--ink: #f5f5f5;
+	--muted: #a5a5a5;
+	--surface: #101010;
+	--line: #282828;
+	--accent: #ff5369;
 	--rail: 76px;
 	font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
 }
@@ -37,7 +37,7 @@ button { color: inherit; font: inherit; }
 	gap: 27px;
 	padding: 24px 0 18px;
 	border-right: 1px solid var(--line);
-	background: #101111;
+	background: #101010;
 }
 
 .brand {
@@ -46,7 +46,7 @@ button { color: inherit; font: inherit; }
 	height: 42px;
 	place-items: center;
 	margin-bottom: 17px;
-	color: var(--blue);
+	color: var(--accent);
 }
 
 .brand svg { width: 31px; height: 31px; }
@@ -59,13 +59,13 @@ button { color: inherit; font: inherit; }
 	border: 0;
 	border-radius: 14px;
 	background: transparent;
-	color: #c5c5c1;
+	color: #c4c4c4;
 	cursor: pointer;
 	transition: background .18s ease, color .18s ease, transform .18s ease;
 }
 
-.nav-item:hover { background: #222321; color: white; transform: translateY(-2px); }
-.nav-item.active { background: #252721; color: var(--blue); }
+.nav-item:hover { background: #222222; color: white; transform: translateY(-2px); }
+.nav-item.active { background: #252525; color: var(--accent); }
 .nav-item svg { width: 23px; height: 23px; }
 .nav-spacer { flex: 1; }
 
@@ -76,7 +76,7 @@ button { color: inherit; font: inherit; }
 	height: 100%;
 	place-items: center;
 	overflow: hidden;
-	background: #0b0c0b;
+	background: #0b0b0b;
 }
 
 .topbar {
@@ -111,11 +111,11 @@ button { color: inherit; font: inherit; }
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
-	border: 1px solid #393a37;
+	border: 1px solid #393939;
 	border-radius: 30px;
 	padding: 9px 13px;
-	background: #171817;
-	color: #e3e3df;
+	background: #171717;
+	color: #e2e2e2;
 	font-size: 12px;
 	cursor: pointer;
 }
@@ -129,7 +129,7 @@ button { color: inherit; font: inherit; }
 	overscroll-behavior-y: contain;
 	scroll-snap-type: y mandatory;
 	scrollbar-width: none;
-	background: #151615;
+	background: #151515;
 }
 
 .feed::-webkit-scrollbar { display: none; }
@@ -153,6 +153,7 @@ button { color: inherit; font: inherit; }
 	height: 100%;
 	object-fit: cover;
 	background: #000;
+	filter: grayscale(1);
 	transition: opacity .8s ease;
 }
 
@@ -183,7 +184,7 @@ button { color: inherit; font: inherit; }
 	border: 1px solid rgb(255 255 255 / 65%);
 	border-radius: 50%;
 	background: #98989898;
-	color: #1d2610;
+	color: #1d1d1d;
 	font-size: 13px;
 	font-weight: 750;
 }
@@ -219,7 +220,7 @@ button { color: inherit; font: inherit; }
 	gap: 6px;
 	margin-top: 11px;
 	font-size: 11px;
-	color: #f0f0ed;
+	color: #efefef;
 }
 
 .audio-label svg { width: 13px; height: 13px; }
@@ -251,14 +252,14 @@ button { color: inherit; font: inherit; }
 }
 
 .action svg { width: 26px; height: 26px; filter: drop-shadow(0 1px 4px rgb(0 0 0 / 65%)); }
-.action.liked { color: #ff5369; }
-.action.liked svg { fill: #ff5369; }
+.action.liked { color: var(--accent); }
+.action.liked svg { fill: var(--accent); }
 .action:active svg { transform: scale(.9); }
 
 .floating-heart {
 	position: absolute;
 	z-index: 4;
-	color: #ff5369;
+	color: var(--accent);
 	font-size: 16px;
 	line-height: 1;
 	text-shadow: 0 1px 6px rgb(0 0 0 / 45%);
@@ -286,7 +287,7 @@ button { color: inherit; font: inherit; }
 	overflow: hidden;
 	border: 2px solid white;
 	border-radius: 50%;
-	background: #252723;
+	background: #252525;
 }
 
 .disc svg { width: 18px; height: 18px; }
@@ -321,7 +322,7 @@ button { color: inherit; font: inherit; }
 	background: rgb(255 255 255 / 30%);
 }
 
-.progress span { display: block; width: 0; height: 100%; background: var(--blue); }
+.progress span { display: block; width: 0; height: 100%; background: var(--accent); }
 
 .side-hint {
 	position: absolute;
@@ -330,7 +331,7 @@ button { color: inherit; font: inherit; }
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	color: #999a95;
+	color: #989898;
 	font-size: 11px;
 }
 
