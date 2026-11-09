@@ -10,7 +10,17 @@
 </head>
 
 <body>
-	<main class="app">
+	<div class="start" id="start">
+		<button class="start-knopf" id="startKnopf" type="button" autofocus>
+			<span class="start-hint">Tippe, um es herauszufinden</span>
+		</button>
+		<label class="kamera-wahl" hidden>
+			<span>Kamera</span>
+			<select id="kameraWahl"></select>
+		</label>
+	</div>
+
+	<main class="app" inert>
 		<nav class="sidebar" aria-label="Hauptnavigation">
 			<div class="brand" aria-label="Startseite">
 				<svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -61,6 +71,10 @@
 					<span>Ton ausschalten</span>
 				</button>
 			</header>
+
+			<div class="kamera-ebene" aria-hidden="true">
+				<video class="kamera" id="kamera" playsinline muted autoplay></video>
+			</div>
 
 			<div class="feed" id="feed" aria-label="Reels-Feed">
 				<article class="reel" aria-label="Reel 1">
