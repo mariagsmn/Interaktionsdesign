@@ -147,16 +147,31 @@ feed.addEventListener('wheel', (event) => {
 
 document.addEventListener('keydown', (event) => {
 	if (event.altKey || event.ctrlKey || event.metaKey) return;
+
+	// Externe Zwei-Tasten-Tastatur: 1 = hoch, 2 = runter. Startet auch den Feed –
+	// auch wenn die Kamera-Auswahl noch den Fokus hat, die sonst die Taste als Eingabe nähme.
+	const zweiTasten = event.key === '1' || event.key === '2';
+	if (!gestartet) {
+		if (zweiTasten) {
+			event.preventDefault();
+			startKnopf.click();
+		}
+		return;
+	}
+
 	if (event.target instanceof HTMLElement && event.target.isContentEditable) return;
 	if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
-
-	if (!gestartet) return;
 
 	switch (event.key) {
 		case 'ArrowDown':
 		case 'ArrowUp':
 			event.preventDefault();
 			moveReel(event.key === 'ArrowDown' ? 1 : -1);
+			break;
+		case '1':
+		case '2':
+			event.preventDefault();
+			moveReel(event.key === '2' ? 1 : -1);
 			break;
 		case 'ArrowRight':
 		case 'ArrowLeft': {
@@ -401,6 +416,8 @@ kameraWahl.addEventListener('change', () => {
 	try {
 		localStorage.setItem(KAMERA_SPEICHER, kameraWahl.value);
 	} catch {}
+	// Nach der Mausauswahl den Fokus zurückgeben, damit 1/2 wieder den Feed starten.
+	startKnopf.focus();
 });
 
 // Startet die gewählte Kamera; fällt auf die Standardkamera zurück, sonst läuft alles ohne Kamera weiter.
