@@ -1,6 +1,5 @@
 const videoFiles = [
 	'igexport-DNEZtv5ScZ8.mp4',
-	'igexport-DQbxe3xjPOX.mp4',
 	'igexport-DTPm-wGEo-Y.mp4',
 	'igexport-DW3djFHjQ6i.mp4',
 	'igexport-DX_2VjLNGcf.mp4',
@@ -17,13 +16,11 @@ const videoFiles = [
 	'igexport-DeJ175_xsgb.mp4',
 	'igexport-DeKOJ46MAle.mp4',
 	'igexport-DeLnJTKCj-d.mp4',
-	'igexport-DeOdInYEVbb.mp4',
 	'igexport-DePbRC8vcKL.mp4',
 	'igexport-DeUT4y1K7Zx.mp4',
 	'igexport-DeW-YfMoElS.mp4',
 	'igexport-DeZJrLeul8y.mp4',
 	'igexport-Deb09k6N8-2.mp4',
-	'igexport-Debi905FILK.mp4',
 	'igexport-DebjJj-sIgd.mp4',
 	'igexport-DecJWRHtzyT.mp4',
 	'igexport-DecJsJ9zlDI.mp4',
@@ -32,7 +29,6 @@ const videoFiles = [
 	'igexport-DDQNvpUSwze.mp4',
 	'igexport-DDYPAwdNqC_.mp4',
 	'igexport-DFk6ECkyTtw.mp4',
-	'igexport-DGdAUK2N9Rj.mp4',
 	'igexport-DIQqHP-io37.mp4',
 	'igexport-DcJ2FFPyQVq.mp4',
 	'igexport-DeCoYaoDwiH.mp4',
@@ -55,9 +51,7 @@ const videoFiles = [
 	'igexport-DecfvksvHiW.mp4',
 	'igexport-DeeFkJ6DRU0.mp4',
 	'igexport-DeeLt9-uxAI.mp4',
-	'igexport-DcFThhRxvZF.mp4',
 	'igexport-Dc_hycvtPbV.mp4',
-	'igexport-Dcfu_PvgKnw.mp4',
 	'igexport-DdJ7JFRxUgd.mp4',
 	'igexport-DdRg-ovI_7W.mp4',
 	'igexport-DdWtPFAJ-fF.mp4',
@@ -65,10 +59,25 @@ const videoFiles = [
 	'igexport-DeVj3kZz0bm.mp4',
 	'igexport-Dec6OxVtRTL.mp4',
 	'igexport-Dehy4hhuBEq.mp4',
-	'igexport-Dekc1jECGt2.mp4',
 	'igexport-DekuExxxeb0.mp4',
 	'igexport-DelZY5bBtC9.mp4',
 	'igexport-Deo1nZtCZUL.mp4',
+	'igexport-Dc81brlNVhy.mp4',
+	'igexport-Dd1kLIVKF6s.mp4',
+	'igexport-De4JEfpo34r.mp4',
+	'igexport-Deu_CXmuwIl.mp4',
+	'igexport-Df2Rp6EIMVq.mp4',
+	'igexport-Df2crngNmcP.mp4',
+	'igexport-Df3-SH0M0uw.mp4',
+	'igexport-Df4BZWxJLV0.mp4',
+	'igexport-Df4DN4XO0cU.mp4',
+	'igexport-Df4ElsGTY0F.mp4',
+	'igexport-Df4JTDUsRpk.mp4',
+	'igexport-Df4KhHihDwk.mp4',
+	'igexport-DfKl97qow64.mp4',
+	'igexport-DfeabjoMZJR.mp4',
+	'igexport-DfuidCLRTZ_.mp4',
+	'igexport-DfwyyZwoTer.mp4',
 ];
 const feed = document.querySelector('#feed');
 const soundButton = document.querySelector('.sound-all');
@@ -79,6 +88,10 @@ const kameraWahl = document.querySelector('#kameraWahl');
 const kameraWahlFeld = kameraWahl.closest('.kamera-wahl');
 const KAMERA_SPEICHER = 'kamera-id';
 const KAMERA_BLUR_MAX = 18; // px bei tiefe 0
+const VIDEO_OPACITY_MIN = 0.15; // Reels verschwinden nie ganz, auch bei tiefe 1
+// Ab Brechungsbeginn bekommt jedes Reel eine eigene zufällige Opacity (VIDEO_OPACITY_MIN bis 1).
+const zufallsOpacity = new Map(); // Video -> Opacity, einmal pro Reel ausgewürfelt
+const BLASS_KURVE = 2; // 1 = alle Stufen gleich oft, größer = mehr klare und weniger blasse Reels
 const app = document.querySelector('.app');
 const playedVideos = new Set();
 const REELS_OHNE_BRECHUNG = 10;
@@ -89,7 +102,7 @@ let gestartet = false;
 let audioCtx = null;
 
 // Tonbrechung
-const NACHHALL_AB = 0.4;
+const NACHHALL_AB = 0.5; // Ab dieser Blässe (tonTiefe 0 bis 1) gilt ein Reel als blass: Graustufen + Echo des vorherigen Reels
 const ketten = new Map(); // Video -> Audio-Nodes, pro Video nur einmal angelegt
 let masterGain = null;
 let impulsantwort = null;
@@ -117,12 +130,25 @@ if (JSON.stringify(shuffledFiles) === previousOrder && shuffledFiles.length > 1)
 try {
 	localStorage.setItem('reels-order', JSON.stringify(shuffledFiles));
 } catch {}
+// Kommentarzahl pro Reel: zufällig, viele kleine und wenige große Zahlen (3 bis ca. 12.000), keine doppelt.
+const vergebeneKommentare = new Set();
+function zufallsKommentare() {
+	let anzahl;
+	do {
+		anzahl = Math.round(Math.exp(Math.log(3) + Math.random() * (Math.log(12000) - Math.log(3))));
+	} while (vergebeneKommentare.has(anzahl));
+	vergebeneKommentare.add(anzahl);
+	if (anzahl < 10000) return anzahl.toLocaleString('de-DE');
+	return `${(anzahl / 1000).toFixed(1).replace('.', ',')} Tsd.`;
+}
+
 feed.replaceChildren(...shuffledFiles.map((file, index) => {
 	const reel = reelTemplate.cloneNode(true);
 	const video = reel.querySelector('video');
 	video.src = `Videos/${file}`;
 	video.preload = index === 0 ? 'auto' : 'metadata';
 	reel.setAttribute('aria-label', `Reel ${index + 1}`);
+	reel.querySelector('[aria-label="Kommentieren"] span').textContent = zufallsKommentare();
 	return reel;
 }));
 
@@ -195,8 +221,31 @@ function setSound(enabled) {
 	soundButton.querySelector('span').textContent = enabled ? 'Ton ausschalten' : 'Ton einschalten';
 }
 
+// Opacity eines Reels: vor Brechungsbeginn 1, danach einmal pro Reel zufällig (VIDEO_OPACITY_MIN bis 1).
+function reelOpacity(video) {
+	if (tiefe === 0) return 1;
+	if (!zufallsOpacity.has(video)) {
+		const blaesse = Math.pow(Math.random(), BLASS_KURVE); // 0 = klar, 1 = maximal blass
+		zufallsOpacity.set(video, 1 - blaesse * (1 - VIDEO_OPACITY_MIN));
+	}
+	return zufallsOpacity.get(video);
+}
+
+// Tonbrechung eines Reels: je blasser das Video, desto stärker (0 = klar, 1 = blassestes Reel).
+function tonTiefe(video) {
+	return (1 - reelOpacity(video)) / (1 - VIDEO_OPACITY_MIN);
+}
+
+// Blasse Reels erscheinen in Graustufen und bekommen das Echo, klare Reels bleiben farbig.
+function istBlass(video) {
+	return tonTiefe(video) >= NACHHALL_AB;
+}
+
 function updateVideoOpacity() {
-	videos.forEach((video) => { video.style.opacity = String(1 - tiefe); });
+	videos.forEach((video) => {
+		video.style.opacity = String(reelOpacity(video));
+		video.style.filter = istBlass(video) ? 'grayscale(1)' : 'none';
+	});
 }
 
 // Kamera: wird sichtbarer und schärfer, während die Reels verblassen.
@@ -270,7 +319,7 @@ function holeKette(video) {
 	return kette;
 }
 
-// Überträgt tiefe auf die Kette. sofort = Werte springen (nur wenn kein Ton läuft), sonst weich gleiten.
+// Überträgt die Tonbrechung des Reels auf die Kette. sofort = Werte springen (nur wenn kein Ton läuft), sonst weich gleiten.
 function stelleKetteEin(video, sofort = false) {
 	const kette = ketten.get(video);
 	if (!kette) return;
@@ -284,18 +333,19 @@ function stelleKetteEin(video, sofort = false) {
 		}
 	};
 	const nachhall = video === nachhallVideo;
-	const hallAnteil = 0.8 * tiefe;
+	const stufe = tonTiefe(video); // pro Reel statt globaler tiefe
+	const hallAnteil = 0.6 * stufe; // bei stufe 1 bleiben 40 % direkter Ton
 	// Kreisbahn mit Radius 1 um die Hörerin: vorne (0°) → hinten-seitlich (135°). Abstand bleibt 1, also keine Pegeländerung.
-	const winkel = tiefe * 135 * Math.PI / 180;
+	const winkel = stufe * 135 * Math.PI / 180;
 	const x = Math.sin(winkel);
 	const z = -Math.cos(winkel);
 
-	// Bei tiefe 0 equalpower: Stereo läuft unverändert durch. HRTF erst, wenn es nach hinten geht.
+	// Bei stufe 0 equalpower: Stereo läuft unverändert durch. HRTF erst, wenn es nach hinten geht.
 	// Gewechselt wird nur, wenn kein Ton durch die Kette läuft, sonst könnte es knacken.
-	const modell = tiefe > 0 ? 'HRTF' : 'equalpower';
+	const modell = stufe > 0 ? 'HRTF' : 'equalpower';
 	if ((sofort || video.paused) && kette.panner.panningModel !== modell) kette.panner.panningModel = modell;
 
-	setze(kette.filter.frequency, 18000 * Math.pow(300 / 18000, tiefe), 0.4);
+	setze(kette.filter.frequency, 18000 * Math.pow(800 / 18000, stufe), 0.4);
 	if (kette.panner.positionX) {
 		setze(kette.panner.positionX, x, 0.6);
 		setze(kette.panner.positionY, 0, 0.6);
@@ -303,7 +353,7 @@ function stelleKetteEin(video, sofort = false) {
 	} else {
 		kette.panner.setPosition(x, 0, z);
 	}
-	setze(kette.delay.delayTime, 1.5 * tiefe, 1);
+	setze(kette.delay.delayTime, 0.6 * stufe, 1);
 	setze(kette.dry.gain, nachhall ? 0.08 : 1 - hallAnteil, 0.4);
 	setze(kette.wet.gain, nachhall ? 1 : hallAnteil, 0.4);
 	setze(kette.kanal.gain, nachhall ? 0.35 : 1, 0.4);
@@ -329,8 +379,8 @@ function playReel(reel) {
 
 	if (aktivesVideo && aktivesVideo !== video) {
 		const vorheriges = aktivesVideo;
-		if (tiefe >= NACHHALL_AB) {
-			// Vorheriges Reel läuft leise als Hall weiter, ein älterer Nachhall wird abgelöst.
+		if (istBlass(video)) {
+			// Neues Reel ist blass: vorheriges läuft leise als Hall weiter, ein älterer Nachhall wird abgelöst.
 			if (nachhallVideo && nachhallVideo !== vorheriges && nachhallVideo !== video) {
 				const alterNachhall = nachhallVideo;
 				nachhallVideo = vorheriges;
@@ -339,6 +389,9 @@ function playReel(reel) {
 				nachhallVideo = vorheriges;
 			}
 			stelleKetteEin(vorheriges);
+		} else {
+			// Neues Reel ist klar: kein Echo, ein laufender Nachhall wird mit ausgeblendet.
+			nachhallVideo = null;
 		}
 	}
 	if (nachhallVideo === video) nachhallVideo = null;
@@ -362,8 +415,9 @@ const observer = new IntersectionObserver((entries) => {
 		if (entry.isIntersecting && entry.intersectionRatio >= 0.65) {
 			playReel(entry.target);
 		} else {
-			// Ab NACHHALL_AB läuft das verlassene Reel weiter, playReel macht es zum Nachhall.
-			if (video === nachhallVideo || (video === aktivesVideo && tiefe >= NACHHALL_AB)) return;
+			// Ab Brechungsbeginn läuft das verlassene Reel erst weiter. playReel entscheidet dann:
+			// Ist das neue Reel blass, wird es zum Nachhall, sonst wird es leise pausiert.
+			if (video === nachhallVideo || (video === aktivesVideo && tiefe > 0)) return;
 			leisePausieren(video);
 		}
 	});

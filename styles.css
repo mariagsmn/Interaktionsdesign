@@ -117,7 +117,8 @@ button { color: inherit; font: inherit; }
 	color: var(--accent);
 }
 
-.brand svg { width: 31px; height: 31px; }
+/* PNG ist 1414×2000 mit quadratischem Logo in der Mitte: cover auf ein Quadrat schneidet genau den leeren Rand oben und unten ab. */
+.brand img { width: 26px; height: 26px; object-fit: cover; display: block; }
 
 .nav-item {
 	display: grid;
@@ -135,6 +136,10 @@ button { color: inherit; font: inherit; }
 .nav-item:hover { background: #222222; color: white; transform: translateY(-2px); }
 .nav-item.active { background: #252525; color: var(--accent); }
 .nav-item svg { width: 23px; height: 23px; }
+/* Icons sind 1414×2000-PNGs mit transparentem Rand oben und unten. height: auto behält das Verhältnis,
+   der leere Rand ist unsichtbar und das Icon sitzt mittig im Knopf. */
+.nav-item img { display: block; width: 23px; height: auto; opacity: .78; transition: opacity .18s ease; }
+.nav-item:hover img, .nav-item.active img { opacity: 1; }
 .nav-spacer { flex: 1; }
 
 .stage {
@@ -246,8 +251,7 @@ button { color: inherit; font: inherit; }
 	height: 100%;
 	object-fit: cover;
 	background: transparent;
-	filter: grayscale(1);
-	transition: opacity .8s ease;
+	transition: opacity .8s ease, filter .8s ease;
 }
 
 .reel::after {
